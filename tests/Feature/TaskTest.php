@@ -27,9 +27,9 @@ class TaskTest extends TestCase
     {
         $this->seed();
         $user = User::factory()->create();
-        $request = $this->actingAs($user)->post(route('tasks.store'), ['name' => 'new', 'status_id' => 1, 'created_by_id' => $user->id]);
+        $request = $this->actingAs($user)->post(route('tasks.store'), ['title' => 'new', 'status_id' => 1, 'created_by_id' => $user->id]);
         $request->assertSessionHasNoErrors();
-        $task = Task::where('name', 'new')->where('created_by_id', $user->id)->first();
+        $task = Task::where('title', 'new')->where('created_by_id', $user->id)->first();
         $response = $this->actingAs($user)->get(route('tasks.show', $task->id));
         $response->assertStatus(200);
     }
@@ -37,7 +37,7 @@ class TaskTest extends TestCase
     public function testStore(): void
     {
         $user = User::factory()->create();
-        $newTask = ['name' => 'new', 'status_id' => 1, 'created_by_id' => $user->id];
+        $newTask = ['title' => 'new', 'status_id' => 1, 'created_by_id' => $user->id];
         $response = $this->actingAs($user)->post(route('tasks.store'), $newTask);
         $response->assertSessionHasNoErrors();
         $response->assertStatus(302);
@@ -53,7 +53,7 @@ class TaskTest extends TestCase
     public function testEdit(): void
     {
         $user = User::factory()->create();
-        $request = $this->actingAs($user)->post(route('tasks.store'), ['name' => 'new', 'status_id' => 1, 'created_by_id' => $user->id]);
+        $request = $this->actingAs($user)->post(route('tasks.store'), ['title' => 'new', 'status_id' => 1, 'created_by_id' => $user->id]);
         $request->assertSessionHasNoErrors();
         $task = Task::first();
         $response = $this->actingAs($user)->get(route('tasks.edit', $task->id));
@@ -63,8 +63,8 @@ class TaskTest extends TestCase
     public function testUpdate(): void
     {
         $user = User::factory()->create();
-        $updatedTask = ['name' => 'in work', 'status_id' => 1, 'created_by_id' => $user->id];
-        $request = $this->actingAs($user)->post(route('tasks.store'), ['name' => 'new', 'status_id' => 1, 'created_by_id' => $user->id]);
+        $updatedTask = ['title' => 'in work', 'status_id' => 1, 'created_by_id' => $user->id];
+        $request = $this->actingAs($user)->post(route('tasks.store'), ['title' => 'new', 'status_id' => 1, 'created_by_id' => $user->id]);
         $request->assertSessionHasNoErrors();
         $task = Task::first();
         $response = $this->patch(route('tasks.update', $task), $updatedTask);
@@ -76,7 +76,7 @@ class TaskTest extends TestCase
     public function testDestroy(): void
     {
         $user = User::factory()->create();
-        $request = $this->actingAs($user)->post(route('tasks.store'), ['name' => 'new', 'status_id' => 1, 'created_by_id' => $user->id]);
+        $request = $this->actingAs($user)->post(route('tasks.store'), ['title' => 'new', 'status_id' => 1, 'created_by_id' => $user->id]);
         $task = Task::first();
         $response = $this->delete(route('tasks.destroy', $task->id));
         $response->assertStatus(302);
